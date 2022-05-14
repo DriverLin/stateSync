@@ -33,7 +33,7 @@ class SyncDict():
     def load(self, data: dict):
         with self.lock:
             self.storage = data
-            _next = (self.version + 1) % 2147483647
+            _next = (self.version + 1) & 0xffff
             self.actionQueue.put(
                 {
                     "action": LOAD,
@@ -47,7 +47,7 @@ class SyncDict():
     def set(self, key, value):
         with self.lock:
             self.storage[key] = value
-            _next = (self.version + 1) % 2147483647
+            _next = (self.version + 1) & 0xffff
             self.actionQueue.put(
                 {
                     "action": SET,
@@ -65,7 +65,7 @@ class SyncDict():
     def delete(self, key):
         with self.lock:
             del self.storage[key]
-            _next = (self.version + 1) % 2147483647
+            _next = (self.version + 1) & 0xffff
             self.actionQueue.put(
                 {
                     "action": DEL,
